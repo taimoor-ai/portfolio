@@ -18,7 +18,7 @@ function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-dark-bg">
+    <div className="min-h-screen bg-[#292929]">
       <Navigation />
       <main>
         <Hero scrollY={scrollY} />

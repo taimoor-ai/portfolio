@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import myImage from "../assets/myImage.png";
 
 const styles = `
@@ -116,10 +116,13 @@ const styles = `
   }
   .hero-btn:active { transform: scale(0.97); }
 
+  /* Floating animation only when NOT hovering the image */
   .hero-img-wrap {
-    animation: float 5.5s ease-in-out 1.8s infinite;
     position: relative;
     display: inline-block;
+  }
+  .hero-img-wrap.floating {
+    animation: float 5.5s ease-in-out 1.8s infinite;
   }
   .hero-img-wrap::after {
     content: '';
@@ -131,13 +134,57 @@ const styles = `
     pointer-events: none;
   }
 
-  /* ── Image: border + radius on DESKTOP only ── */
-  .hero-img {
-    border-radius: 0;
-    border: none;
+  /* ── Image stack ── */
+  .img-stack {
+    position: relative;
+    display: inline-block;
+    cursor: crosshair;
   }
+
+  /* Base grayscale image */
+  .hero-img-bw {
+    display: block;
+    height: clamp(300px, 65vh, 560px);
+    max-width: clamp(220px, 34vw, 420px);
+    object-fit: contain;
+    object-position: center;
+    filter: grayscale(1);
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  /* Color image on top, clipped to circle spotlight */
+  .hero-img-color {
+    position: absolute;
+    inset: 0;
+    display: block;
+    height: clamp(300px, 65vh, 560px);
+    max-width: clamp(220px, 34vw, 420px);
+    object-fit: contain;
+    object-position: center;
+    filter: grayscale(0);
+    pointer-events: none;
+    clip-path: circle(0px at 50% 50%);
+    transition: clip-path 0.06s linear;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  /* Subtle ring around spotlight */
+  .spotlight-ring {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .img-stack:hover .spotlight-ring {
+    opacity: 1;
+  }
+
   @media (min-width: 769px) {
-    .hero-img {
+    .hero-img-bw,
+    .hero-img-color {
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
@@ -169,8 +216,47 @@ const styles = `
   }
 `;
 
+const RADIUS = 110; // spotlight radius in px
+
 export default function Hero() {
   const [imgError, setImgError] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const colorImgRef = useRef(null);
+  const ringRef = useRef(null);
+  const stackRef = useRef(null);
+
+  const handleMouseMove = useCallback((e) => {
+    const rect = stackRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (colorImgRef.current) {
+      colorImgRef.current.style.clipPath = `circle(${RADIUS}px at ${x}px ${y}px)`;
+    }
+    if (ringRef.current) {
+      ringRef.current.style.background = `radial-gradient(circle ${RADIUS + 2}px at ${x}px ${y}px,
+        transparent ${RADIUS - 1}px,
+        rgba(200,70,70,0.55) ${RADIUS}px,
+        rgba(200,70,70,0.15) ${RADIUS + 10}px,
+        transparent ${RADIUS + 18}px
+      )`;
+    }
+  }, []);
+
+  const handleMouseEnter = useCallback(() => {
+    setIsHovering(true);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHovering(false);
+    if (colorImgRef.current) {
+      colorImgRef.current.style.clipPath = "circle(0px at 50% 50%)";
+    }
+    if (ringRef.current) {
+      ringRef.current.style.background = "none";
+    }
+  }, []);
 
   return (
     <>
@@ -181,6 +267,7 @@ export default function Hero() {
           position: "relative",
           width: "100%",
           minHeight: "100vh",
+          paddingTop:"4rem",
           overflow: "hidden",
           display: "flex",
           alignItems: "stretch",
@@ -291,7 +378,7 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* RIGHT: Image */}
+          {/* RIGHT: Image with spotlight color reveal */}
           <div
             className="hero-right"
             style={{
@@ -301,20 +388,37 @@ export default function Hero() {
               justifyContent: "center",
             }}
           >
-            <div className="hero-img-wrap">
-              <img
-                src={myImage}
-                alt="Taimoor character"
-                onError={() => setImgError(true)}
-                className="hero-img filter grayscale"
-                style={{
-                  height: "clamp(300px, 65vh, 560px)",
-                  maxWidth: "clamp(220px, 34vw, 420px)",
-                  objectFit: "contain",
-                  objectPosition: "center",
-                  display: "block",
-                }}
-              />
+            <div className={`hero-img-wrap ${isHovering ? "" : "floating"}`}>
+              {/* Image stack — grayscale base + color top layer */}
+              <div
+                ref={stackRef}
+                className="img-stack"
+                onMouseMove={handleMouseMove}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                {/* Layer 1: grayscale base */}
+                <img
+                  src={myImage}
+                  alt="Taimoor character"
+                  onError={() => setImgError(true)}
+                  className="hero-img-bw"
+                />
+
+                {/* Layer 2: full color, clipped to spotlight circle */}
+                {!imgError && (
+                  <img
+                    ref={colorImgRef}
+                    src={myImage}
+                    alt=""
+                    aria-hidden="true"
+                    className="hero-img-color"
+                  />
+                )}
+
+                {/* Layer 3: red ring around spotlight */}
+                <div ref={ringRef} className="spotlight-ring" />
+              </div>
             </div>
           </div>
         </div>
