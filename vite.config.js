@@ -6,6 +6,6 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  base: '/portfolio/',   // ✅ ONLY THIS (no full URL)
-  assetsInclude: ['**/*.glb'],
+  assetsInclude: ['**/*.glb'],  // ✅ keep 3D asset support
+  // base removed for Vercel deployment
 })
