@@ -6,6 +6,6 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  base: 'https://github.com/taimoor-ai/portfolio' , // 👈 VERY IMPORTANT
-   assetsInclude: ['**/*.glb'], // ✅ THIS LINE FIXES IT
+  base: '/portfolio/',   // ✅ ONLY THIS (no full URL)
+  assetsInclude: ['**/*.glb'],
 })
