@@ -1,37 +1,51 @@
-import { useState, useEffect } from 'react'
-import { Menu, X } from 'lucide-react'
-import { faGithub, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
+import {
+  faGithub,
+  faInstagram,
+  faLinkedin,
+} from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  const navItems = ['Home', 'About', 'Project', 'Services', 'Contact']
+  const navItems = ["Home", "About", "Project", "Services", "Contact"];
 
   const socialLinks = [
-    { icon: faGithub,    href: '#github',    label: 'GitHub'    },
-    { icon: faInstagram, href: '#instagram', label: 'Instagram' },
-    { icon: faLinkedin,  href: '#linkedin',  label: 'LinkedIn'  },
-  ]
+    { icon: faGithub, href: "https://github.com/taimoor-ai", label: "GitHub" },
+    {
+      icon: faInstagram,
+      href: "https://www.instagram.com/tamuur._here/",
+      label: "Instagram",
+    },
+    {
+      icon: faLinkedin,
+      href: "https://www.linkedin.com/in/taimur-arshad-a7a408260/",
+      label: "LinkedIn",
+    },
+  ];
 
   return (
     <nav className="fixed top-0 w-full z-50 px-4 py-6 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-
         {/* Pill container */}
         <div
           style={{
-            backgroundColor: scrolled ? 'rgba(18,18,18,0.95)' : 'transparent',
-            borderColor:     scrolled ? 'rgba(100,100,100,0.5)' : 'rgba(100,100,100,0)',
-            boxShadow:       scrolled ? '0 4px 32px rgba(0,0,0,0.45)' : 'none',
-            transition: 'background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease',
+            backgroundColor: scrolled ? "rgba(18,18,18,0.95)" : "transparent",
+            borderColor: scrolled
+              ? "rgba(100,100,100,0.5)"
+              : "rgba(100,100,100,0)",
+            boxShadow: scrolled ? "0 4px 32px rgba(0,0,0,0.45)" : "none",
+            transition:
+              "background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
           }}
           className="rounded-full px-6 sm:px-8 py-2 flex justify-between items-center border backdrop-blur-md"
         >
@@ -80,7 +94,7 @@ export default function Navigation() {
         {/* Mobile dropdown */}
         {isOpen && (
           <div
-            style={{ backgroundColor: 'rgba(18,18,18,0.97)' }}
+            style={{ backgroundColor: "rgba(18,18,18,0.97)" }}
             className="md:hidden mt-4 backdrop-blur-md rounded-3xl px-6 py-6 border border-gray-700 border-opacity-50"
           >
             <div className="flex flex-col gap-4 mb-6">
@@ -101,6 +115,12 @@ export default function Navigation() {
                 <a
                   key={social.label}
                   href={social.href}
+                  target="_blank"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(social.href, "_blank", "noopener,noreferrer");
+                  }}
+                  rel="noopener noreferrer"
                   aria-label={social.label}
                   className="text-gray-300 hover:text-white transition-colors duration-300 p-2"
                 >
@@ -110,8 +130,7 @@ export default function Navigation() {
             </div>
           </div>
         )}
-
       </div>
     </nav>
-  )
+  );
 }

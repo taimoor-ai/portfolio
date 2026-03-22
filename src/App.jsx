@@ -7,7 +7,7 @@ import Skills from './components/Skills'
 import Experience from './components/Experience'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
-
+import TechMarquee from './components/Techmarquee'
 function App() {
   const [scrollY, setScrollY] = useState(0)
 
@@ -23,6 +23,7 @@ function App() {
       <main>
         <Hero scrollY={scrollY} />
         <About />
+        <TechMarquee/>
         <Projects />
         <Skills />
         <Experience />
