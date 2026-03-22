@@ -63,8 +63,8 @@ export default function TechMarquee() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="mt-12 px-0 sm:px-16 relative overflow-hidden"
-      style={{ height: '200px' }}
+      className="mt-12   px-0 sm:px-16 relative overflow-hidden"
+      style={{ height: '50px' }}
     >
       {/* Staggered wrapper around each logo */}
       <div style={{ display: 'flex', height: '100%', alignItems: 'center' }}>
@@ -78,6 +78,7 @@ export default function TechMarquee() {
       {/* The actual marquee animates in as one block after stagger completes */}
       <motion.div
         variants={itemVariants}
+        className='px-0 sm:px-16'
         style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
       >
         <LogoLoop

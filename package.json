@@ -3,10 +3,12 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "homepage":"https://github.com/taimoor-ai/portfolio",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 3000",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite",
+  "build": "vite build",
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^7.2.0",
@@ -28,6 +30,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.0",
     "autoprefixer": "^10.4.17",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "vite": "^5.2.0"
