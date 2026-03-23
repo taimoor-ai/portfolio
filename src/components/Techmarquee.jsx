@@ -63,7 +63,7 @@ export default function TechMarquee() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="mt-12   px-0 sm:px-16 relative overflow-hidden"
+      className="py-10  bg-[#0a0a0f]  px-0 sm:px-16 relative overflow-hidden"
       style={{ height: '50px' }}
     >
       {/* Staggered wrapper around each logo */}
