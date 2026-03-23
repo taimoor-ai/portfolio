@@ -7,7 +7,7 @@ export default function Skills() {
   const skillCategories = [
     {
       category: 'Frontend',
-      skills: ['React', 'Vue.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Next.js']
+      skills: ['React','ReactNative', 'Vue.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Next.js']
     },
     {
       category: 'Backend',
@@ -32,22 +32,26 @@ export default function Skills() {
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
+    hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.5 },
+      transition: { duration: 0.4 },
     },
   }
 
   return (
-    <section id="skills" ref={ref} className="section-container relative">
+    <section id="skills" ref={ref} className="bg-black text-white py-20 px-6">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate={inView ? 'visible' : 'hidden'}
+        className="max-w-6xl mx-auto"
       >
-        <motion.h2 variants={itemVariants} className="text-4xl font-bold mb-12 gradient-text">
+        <motion.h2 
+          variants={itemVariants} 
+          className="text-4xl font-bold mb-12 text-white"
+        >
           Skills & Technologies
         </motion.h2>
 
@@ -56,15 +60,18 @@ export default function Skills() {
             <motion.div
               key={idx}
               variants={itemVariants}
-              className="glass-effect p-6 rounded-xl hover-glow"
+              className="bg-white/5 border border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-white/30 transition"
             >
-              <h3 className="text-xl font-bold text-accent-cyan mb-4">{category.category}</h3>
+              <h3 className="text-xl font-semibold text-white mb-4">
+                {category.category}
+              </h3>
+
               <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill) => (
                   <motion.span
                     key={skill}
-                    whileHover={{ scale: 1.1 }}
-                    className="px-4 py-2 bg-dark-bg border border-accent-cyan/30 rounded-lg text-gray-300 hover:bg-accent-cyan/10 hover:border-accent-cyan transition-all duration-300 text-sm font-medium"
+                    whileHover={{ scale: 1.05 }}
+                    className="px-4 py-2 bg-black border border-white/20 rounded-lg text-gray-300 hover:bg-white hover:text-black transition-all duration-300 text-sm font-medium"
                   >
                     {skill}
                   </motion.span>

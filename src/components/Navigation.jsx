@@ -17,7 +17,7 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const navItems = ["Home", "About", "Project", "Services", "Contact"];
+  const navItems = ["Home", "About", "Projects", "Services", "Contact"];
 
   const socialLinks = [
     { icon: faGithub, href: "https://github.com/taimoor-ai", label: "GitHub" },

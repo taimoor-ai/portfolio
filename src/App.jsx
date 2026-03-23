@@ -26,7 +26,7 @@ function App() {
         <TechMarquee/>
         <Projects />
         <Skills />
-        <Experience />
+        {/* <Experience /> */}
         <Contact />
       </main>
       <Footer />
