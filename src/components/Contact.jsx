@@ -51,7 +51,7 @@ export default function Contact() {
 
     setLoading(true)
     try {
-      const res = await fetch("http://13.201.48.253:5000/api/contact", {
+      const res = await fetch("https://api.pllantify.store/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
