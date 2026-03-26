@@ -51,7 +51,7 @@ export default function Contact() {
 
     setLoading(true)
     try {
-      const res = await fetch("https://api.pllantify.store/api/contact", {
+      const res = await fetch("https://bsease8jvk.execute-api.ap-south-1.amazonaws.com/default/contactFormHandler", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
