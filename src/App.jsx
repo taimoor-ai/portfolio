@@ -8,6 +8,7 @@ import Experience from './components/Experience'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import TechMarquee from './components/Techmarquee'
+import { Analytics } from '@vercel/analytics/react';
 function App() {
   const [scrollY, setScrollY] = useState(0)
 
@@ -28,8 +29,10 @@ function App() {
         <Skills />
         {/* <Experience /> */}
         <Contact />
+        <Analytics />
       </main>
       <Footer />
+      
     </div>
   )
 }
