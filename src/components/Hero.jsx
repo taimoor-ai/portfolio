@@ -443,6 +443,7 @@ export default function Hero() {
                   alt="Taimoor character"
                   onError={() => setImgError(true)}
                   className="hero-img-bw"
+                  loading="lazy"
                 />
 
                 {/* Layer 2: full color, clipped to spotlight circle */}
