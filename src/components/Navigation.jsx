@@ -51,6 +51,11 @@ export default function Navigation() {
         >
           {/* Logo */}
           <div className="text-white text-xl sm:text-2xl font-bold tracking-tight min-w-fit">
+             {/* <img
+              src={logo}
+              alt="Taimoor Logo"
+              className="h-8 sm:h-10 mr-2" // slightly smaller than before
+            /> */}
             Taimoor
           </div>
 
