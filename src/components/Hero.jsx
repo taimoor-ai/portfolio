@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import myImage from "../assets/myImage.png";
-
+import TextType from "./TypeText";
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&display=swap');
 
@@ -267,7 +267,7 @@ export default function Hero() {
           position: "relative",
           width: "100%",
           minHeight: "100vh",
-          paddingTop:"4rem",
+          paddingTop: "4rem",
           overflow: "hidden",
           display: "flex",
           alignItems: "stretch",
@@ -277,8 +277,11 @@ export default function Hero() {
         <div
           className="hero-bg"
           style={{
-            position: "absolute", inset: 0, zIndex: 0,
-            background: "radial-gradient(ellipse 75% 85% at 30% 55%, #2e2e2e 0%, #161616 100%)",
+            position: "absolute",
+            inset: 0,
+            zIndex: 0,
+            background:
+              "radial-gradient(ellipse 75% 85% at 30% 55%, #2e2e2e 0%, #161616 100%)",
           }}
         />
         <div className="hero-vignette" />
@@ -288,7 +291,8 @@ export default function Hero() {
         <div
           className="hero-layout"
           style={{
-            position: "relative", zIndex: 2,
+            position: "relative",
+            zIndex: 2,
             width: "100%",
             display: "flex",
             flexDirection: "row",
@@ -314,15 +318,17 @@ export default function Hero() {
             <div
               className="hero-tagline"
               style={{
-                fontSize: "0.7rem", letterSpacing: "0.28em",
-                color: "rgba(200,70,70,0.85)", textTransform: "uppercase",
+                fontSize: "0.7rem",
+                letterSpacing: "0.28em",
+                color: "rgba(200,70,70,0.85)",
+                textTransform: "uppercase",
                 fontFamily: "'Playfair Display', serif",
               }}
             >
               — Portfolio
             </div>
 
-            <h1
+            {/* <h1
               className="hero-name-shimmer"
               style={{
                 margin: 0, fontWeight: 900, lineHeight: 1.05,
@@ -332,8 +338,36 @@ export default function Hero() {
               }}
             >
               Hi! I'm<br />Taimoor
+            </h1> */}
+            <h1
+              className="hero-name-shimmer"
+              style={{
+                margin: 0,
+                fontWeight: 900,
+                lineHeight: 1.05,
+                  minHeight: "2.2em",   // reserve space for 1–2 lines
+                fontSize: "clamp(2.8rem, 6.5vw, 6.5rem)",
+                letterSpacing: "-0.02em",
+                fontFamily: "'Playfair Display', 'Georgia', serif",
+              }}
+            > 
+            <span style={{ display: "inline-block" }}>
+              <TextType
+                text={[
+                  "Hi! I'm\nTaimoor",
+                  "Full Stack\nDeveloper",
+                  "React NodeJs\nExpert",
+                   "Ai/Ml\nEnthusiast",
+                ]}
+                typingSpeed={100}
+                pauseDuration={1500}
+                showCursor
+                cursorCharacter="_"
+                deletingSpeed={50}
+              />
+                </span>
             </h1>
-
+          
             <div
               className="hero-left-accent"
               style={{ display: "flex", alignItems: "center", gap: "10px" }}
@@ -348,7 +382,9 @@ export default function Hero() {
                 margin: 0,
                 fontSize: "clamp(0.78rem, 1.2vw, 0.95rem)",
                 color: "rgba(180,180,180,0.5)",
-                letterSpacing: "0.06em", lineHeight: 1.7, maxWidth: "320px",
+                letterSpacing: "0.06em",
+                lineHeight: 1.7,
+                maxWidth: "320px",
               }}
             >
               Developer · Designer · Creator
@@ -366,10 +402,14 @@ export default function Hero() {
                     padding: "0.55rem 1.5rem",
                     border: "1px solid rgba(200,200,200,0.4)",
                     color: "rgba(225,225,225,0.88)",
-                    background: "transparent", borderRadius: "3px",
-                    letterSpacing: "0.1em", fontSize: "0.75rem",
-                    fontWeight: 500, cursor: "pointer",
-                    fontFamily: "inherit", textTransform: "uppercase",
+                    background: "transparent",
+                    borderRadius: "3px",
+                    letterSpacing: "0.1em",
+                    fontSize: "0.75rem",
+                    fontWeight: 500,
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                    textTransform: "uppercase",
                   }}
                 >
                   {label}
@@ -427,19 +467,32 @@ export default function Hero() {
         <div
           className="scroll-hint"
           style={{
-            position: "absolute", bottom: "1.6rem",
-            left: "50%", transform: "translateX(-50%)",
-            zIndex: 6, display: "flex", flexDirection: "column",
-            alignItems: "center", gap: "6px",
+            position: "absolute",
+            bottom: "1.6rem",
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 6,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "6px",
           }}
         >
-          <span style={{ fontSize: "0.6rem", letterSpacing: "0.22em", color: "rgba(180,180,180,0.3)", textTransform: "uppercase" }}>
+          <span
+            style={{
+              fontSize: "0.6rem",
+              letterSpacing: "0.22em",
+              color: "rgba(180,180,180,0.3)",
+              textTransform: "uppercase",
+            }}
+          >
             Scroll
           </span>
           <div
             className="scroll-arrow"
             style={{
-              width: 0, height: 0,
+              width: 0,
+              height: 0,
               borderLeft: "5px solid transparent",
               borderRight: "5px solid transparent",
               borderTop: "6px solid rgba(180,180,180,0.28)",
