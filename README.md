@@ -16,7 +16,7 @@ It features a **modern dark theme**, smooth animations, and a fully **responsive
 - Fully responsive and fast loading
 
 ## Live Demo
-[View Portfolio Online](https://taimoor-ai.github.io/portfolio)
+[View Portfolio Online](https://taimoorarshad.online)
 
 ## License
 MIT License
