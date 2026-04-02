@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring, animate } from "framer-motion";
+import { motion, animate } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState, useRef } from "react";
 import Lanyard from "./Lanyard.jsx";
@@ -39,13 +39,16 @@ function Particle({ style }) {
       style={{
         position: "absolute",
         borderRadius: "50%",
-        background: "rgba(140, 120, 255, 0.35)",
+        background: "rgba(255, 255, 255, 0.15)",
         pointerEvents: "none",
-        ...style,
+        width: style.width,
+        height: style.height,
+        top: style.top,
+        left: style.left,
       }}
       animate={{
         y: [0, -18, 0],
-        opacity: [0.2, 0.55, 0.2],
+        opacity: [0.1, 0.4, 0.1],
         scale: [1, 1.3, 1],
       }}
       transition={{
@@ -60,7 +63,6 @@ function Particle({ style }) {
 
 /* ── Stat item with counter & hover ── */
 function StatItem({ value, sup, label, inView }) {
-  // Strip "+" from raw numeric target
   const rawNum = parseFloat(value);
   const hasSup = !!sup;
   const hasPlusSign = value.endsWith("+");
@@ -68,17 +70,25 @@ function StatItem({ value, sup, label, inView }) {
 
   return (
     <motion.div
-      className="stat-item"
+      className="flex flex-col gap-1 cursor-default relative group"
       whileHover={{ y: -4, scale: 1.06 }}
       transition={{ type: "spring", stiffness: 400, damping: 20 }}
-      style={{ cursor: "default" }}
     >
-      <span className="stat-value">
+      {/* hover glow bg */}
+      <div className="absolute -inset-2 rounded-xl bg-white/0 group-hover:bg-white/5 transition-colors duration-300 -z-10" />
+
+      <span className="font-['Syne',sans-serif] text-[clamp(1.3rem,2.5vw,1.65rem)] font-extrabold text-white leading-none flex items-baseline">
         {count}
         {hasPlusSign && !String(count).endsWith("+") ? "+" : ""}
-        {hasSup && <sup>{sup}</sup>}
+        {hasSup && (
+          <sup className="text-[0.55em] text-white/50 font-semibold ml-px">
+            {sup}
+          </sup>
+        )}
       </span>
-      <span className="stat-label">{label}</span>
+      <span className="text-[0.68rem] text-white/40 font-normal capitalize tracking-[0.01em] whitespace-nowrap group-hover:text-white/70 transition-colors duration-300">
+        {label}
+      </span>
     </motion.div>
   );
 }
@@ -107,19 +117,12 @@ export default function About() {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.18 },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.18 } },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 24 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.75, ease: "easeOut" },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.75, ease: "easeOut" } },
   };
 
   const cardVariants = {
@@ -138,7 +141,6 @@ export default function About() {
     { value: "3.40", sup: "/4.00", label: "GPA" },
   ];
 
-  /* Particle definitions */
   const particles = [
     { width: 5, height: 5, top: "18%", left: "8%", delay: 0, duration: 3.8 },
     { width: 3, height: 3, top: "70%", left: "12%", delay: 1.2, duration: 4.5 },
@@ -151,366 +153,142 @@ export default function About() {
 
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap');
+      {/* Syne font */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap"
+        rel="stylesheet"
+      />
 
-        .about-section {
-          font-family: 'Inter', sans-serif;
-          min-height: 100vh;
-          display: flex;
-          background:#121212;
-          align-items: center;
-          justify-content: center;
-          padding: 60px 24px;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .about-wrapper {
-          width: 100%;
-          max-width: 1000px;
-          position: relative;
-          z-index: 1;
-        }
-
-        /* ── Main card ── */
-        .about-card {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(120, 100, 220, 0.22);
-          border-radius: 22px;
-          display: grid;
-          grid-template-columns: 1fr 360px;
-          gap: 0;
-          align-items: stretch;
-          position: relative;
-          box-shadow:
-            0 0 0 1px rgba(100, 80, 200, 0.08),
-            0 8px 48px rgba(0, 0, 0, 0.45),
-            inset 0 1px 0 rgba(255, 255, 255, 0.04);
-          backdrop-filter: blur(12px);
-          overflow: hidden;
-          min-height: 480px;
-          transition: box-shadow 0.4s ease;
-        }
-
-        .about-card:hover {
-          box-shadow:
-            0 0 0 1px rgba(130, 100, 255, 0.18),
-            0 12px 64px rgba(80, 50, 200, 0.35),
-            inset 0 1px 0 rgba(255, 255, 255, 0.06);
-        }
-
-        @media (max-width: 780px) {
-          .about-card {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        /* Glowing border pulse ring */
-        .card-glow-ring {
-          position: absolute;
-          inset: -1px;
-          border-radius: 22px;
-          border: 1px solid transparent;
-          background: linear-gradient(
-            135deg,
-            rgba(140, 100, 255, 0.45),
-            rgba(80, 60, 200, 0.2),
-            rgba(140, 100, 255, 0.45)
-          ) border-box;
-          -webkit-mask:
-            linear-gradient(#fff 0 0) padding-box,
-            linear-gradient(#fff 0 0);
-          -webkit-mask-composite: destination-out;
-          mask-composite: exclude;
-          pointer-events: none;
-          opacity: 0;
-          animation: borderPulse 3.5s ease-in-out infinite;
-        }
-
-        @keyframes borderPulse {
-          0%, 100% { opacity: 0; }
-          50%       { opacity: 1; }
-        }
-
-        /* Shimmer sweep */
-        .shimmer-sweep {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            105deg,
-            transparent 35%,
-            rgba(200, 180, 255, 0.07) 50%,
-            transparent 65%
-          );
-          pointer-events: none;
-          z-index: 5;
-          transform: translateX(-100%);
-          transition: none;
-        }
-
-        .shimmer-sweep.active {
-          animation: shimmerSweep 0.9s ease forwards;
-        }
-
-        @keyframes shimmerSweep {
-          from { transform: translateX(-100%); }
-          to   { transform: translateX(200%); }
-        }
-
-        /* Vertical separator glow */
-        .about-card::after {
-          content: '';
-          position: absolute;
-          left: calc(100% - 280px);
-          top: 15%;
-          height: 70%;
-          width: 1px;
-          background: linear-gradient(
-            to bottom,
-            transparent,
-            rgba(140, 120, 255, 0.3) 30%,
-            rgba(100, 80, 220, 0.45) 60%,
-            transparent
-          );
-          pointer-events: none;
-        }
-
-        /* ── Left content ── */
-        .about-left {
-          display: flex;
-          flex-direction: column;
-          padding: 48px 40px 44px 52px;
-          position: relative;
-        }
-
-        .about-title {
-          font-family: 'Syne', sans-serif;
-          font-size: clamp(1.6rem, 3vw, 2.1rem);
-          font-weight: 700;
-          color: #e8e4ff;
-          margin: 0 0 18px 0;
-          letter-spacing: -0.01em;
-          position: relative;
-        }
-
-        /* Underline draw animation on title */
-        .about-title::after {
-          content: '';
-          position: absolute;
-          bottom: -4px;
-          left: 0;
-          height: 2px;
-          width: 0%;
-          background: linear-gradient(90deg, rgba(140,100,255,0.8), transparent);
-          border-radius: 2px;
-          transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
-        }
-
-        .title-visible .about-title::after {
-          width: 60%;
-        }
-
-        .about-description {
-          font-size: clamp(0.78rem, 1.4vw, 0.88rem);
-          color: white;
-          line-height: 1.75;
-          margin: 0;
-          font-weight: 300;
-          flex: 1;
-        }
-
-        /* ── Stats ── */
-        .stats-row {
-          display: flex;
-          gap: 28px;
-          align-items: flex-end;
-          flex-wrap: wrap;
-          margin-top: 36px;
-        }
-
-        .stat-item {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          position: relative;
-        }
-
-        /* Hover glow behind stat */
-        .stat-item::before {
-          content: '';
-          position: absolute;
-          inset: -6px -8px;
-          border-radius: 10px;
-          background: rgba(120, 90, 240, 0);
-          transition: background 0.3s ease;
-          z-index: -1;
-        }
-
-        .stat-item:hover::before {
-          background: rgba(120, 90, 240, 0.12);
-        }
-
-        .stat-value {
-          font-family: 'Syne', sans-serif;
-          font-size: clamp(1.3rem, 2.5vw, 1.65rem);
-          font-weight: 800;
-          color: #ffffff;
-          line-height: 1;
-          display: flex;
-          align-items: baseline;
-        }
-
-        .stat-value sup {
-          font-size: 0.55em;
-          color: rgba(160, 140, 255, 0.85);
-          font-weight: 600;
-          margin-left: 1px;
-        }
-
-        .stat-label {
-          font-size: 0.68rem;
-          color: rgba(160, 145, 210, 0.6);
-          font-weight: 400;
-          text-transform: capitalize;
-          letter-spacing: 0.01em;
-          white-space: nowrap;
-          transition: color 0.3s ease;
-        }
-
-        .stat-item:hover .stat-label {
-          color: rgba(180, 165, 255, 0.85);
-        }
-
-        .stat-divider {
-          width: 1px;
-          height: 30px;
-          background: rgba(120, 100, 200, 0.25);
-          align-self: center;
-        }
-
-        /* ── Lanyard column ── */
-        .lanyard-column {
-          position: relative;
-          width: 280px;
-          flex-shrink: 0;
-          align-self: stretch;
-          // border-left: 1px solid rgba(120, 100, 220, 0.1);
-        }
-
-        .lanyard-canvas-wrapper {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-        }
-
-        .lanyard-canvas-wrapper canvas,
-        .lanyard-canvas-wrapper > div,
-        .lanyard-canvas-wrapper > div > canvas {
-          width: 100% !important;
-          height: 100% !important;
-          display: block;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 780px) {
-          .about-left {
-            padding: 28px 24px 32px;
-          }
-
-          .about-card::after {
-            display: none;
-          }
-
-          .stats-row {
-            gap: 16px;
-            margin-top: 24px;
-          }
-
-          .stat-divider {
-            display: none;
-          }
-        }
-
-        @media (max-width: 420px) {
-          .about-left {
-            padding: 20px 16px 24px;
-          }
-
-          .stats-row {
-            gap: 12px;
-          }
-        }
-      `}</style>
-
-      <section id="about" ref={ref} className="about-section">
-        <div className="about-wrapper">
+      <section
+        id="about"
+        ref={ref}
+        className="min-h-screen flex items-center justify-center bg-[#121212] px-6 py-16 relative overflow-hidden"
+      >
+        <div className="w-full max-w-[1000px] relative z-10">
           <motion.div
             variants={cardVariants}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
-            className={`about-card ${inView ? "title-visible" : ""}`}
+            className={`
+              relative overflow-hidden min-h-[480px]
+              bg-white/[0.03] border border-white/10 rounded-[22px]
+              backdrop-blur-xl
+              grid ${isMobile ? "grid-cols-1" : "grid-cols-[1fr_360px]"}
+              shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_8px_48px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.04)]
+              hover:shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_12px_64px_rgba(255,255,255,0.06),inset_0_1px_0_rgba(255,255,255,0.06)]
+              transition-shadow duration-500
+              ${inView ? "title-visible" : ""}
+            `}
           >
             {/* Animated border glow ring */}
-            {inView && <div className="card-glow-ring" />}
+            {inView && (
+              <div
+                className="absolute inset-[-1px] rounded-[22px] pointer-events-none animate-[borderPulse_3.5s_ease-in-out_infinite]"
+                style={{
+                  background:
+                    "linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05), rgba(255,255,255,0.2)) border-box",
+                  border: "1px solid transparent",
+                  WebkitMask:
+                    "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
+                  WebkitMaskComposite: "destination-out",
+                  maskComposite: "exclude",
+                }}
+              />
+            )}
 
             {/* Shimmer sweep */}
-            <div className={`shimmer-sweep ${shimmer ? "active" : ""}`} />
+            <div
+              className={`absolute inset-0 pointer-events-none z-10 ${
+                shimmer ? "animate-[shimmerSweep_0.9s_ease_forwards]" : ""
+              }`}
+              style={{
+                background:
+                  "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.05) 50%, transparent 65%)",
+                transform: shimmer ? undefined : "translateX(-100%)",
+              }}
+            />
 
             {/* Floating particles */}
-            {inView &&
-              particles.map((p, i) => (
-                <Particle key={i} style={p} />
-              ))}
+            {inView && particles.map((p, i) => <Particle key={i} style={p} />)}
+
+            {/* Vertical separator */}
+            {!isMobile && (
+              <div
+                className="absolute top-[15%] h-[70%] w-px pointer-events-none"
+                style={{
+                  left: "calc(100% - 280px)",
+                  background:
+                    "linear-gradient(to bottom, transparent, rgba(255,255,255,0.15) 30%, rgba(255,255,255,0.25) 60%, transparent)",
+                }}
+              />
+            )}
 
             {/* ── Left Content ── */}
             <motion.div
-              className="about-left"
+              className="flex flex-col px-[52px] py-[48px] max-sm:px-6 max-sm:py-7 relative"
               variants={containerVariants}
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
             >
-              <motion.h2 variants={itemVariants} className="about-title">
+              {/* Title with underline draw */}
+              <motion.h2
+                variants={itemVariants}
+                className="font-['Syne',sans-serif] text-[clamp(1.6rem,3vw,2.1rem)] font-bold text-white tracking-[-0.01em] m-0 mb-[18px] relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:rounded-sm after:transition-[width] after:duration-[800ms] after:ease-[cubic-bezier(0.16,1,0.3,1)] after:delay-500"
+                style={{
+                  "--tw-after-width": inView ? "60%" : "0%",
+                }}
+              >
                 About Me
+                {/* Manual underline since Tailwind can't animate arbitrary widths easily */}
+                <span
+                  className="absolute bottom-[-4px] left-0 h-[2px] rounded-sm bg-gradient-to-r from-white/70 to-transparent transition-[width] duration-[800ms] delay-500"
+                  style={{ width: inView ? "60%" : "0%" }}
+                />
               </motion.h2>
 
-              <motion.p variants={itemVariants} className="about-description">
+              <motion.p
+                variants={itemVariants}
+                className="text-[clamp(0.78rem,1.4vw,0.88rem)] text-white/80 leading-[1.75] m-0 font-light flex-1"
+              >
                 I'm Taimoor Arshad a BS Computer Science student (6th Semester) based in
-                Pakistan with a focused mission: become a top 1% backend
-                engineer who builds systems that scale. I specialize in the
-                Node.js / Express / MongoDB stack and have a deep interest in
-                real-time communication, distributed architecture, and low-level
-                networking. My projects aren't just exercises — they're proof of
-                my commitment to writing production-quality code. I bridge the
-                gap between frontend fluency and backend depth, and I'm
-                currently expanding into TypeScript, cloud infrastructure, and
-                systems security. "I don't just learn technologies — I build
-                with them until I understand them completely."
+                Pakistan with a focused mission: become a top 1% backend engineer who
+                builds systems that scale. I specialize in the Node.js / Express / MongoDB
+                stack and have a deep interest in real-time communication, distributed
+                architecture, and low-level networking. My projects aren't just exercises —
+                they're proof of my commitment to writing production-quality code. I bridge
+                the gap between frontend fluency and backend depth, and I'm currently
+                expanding into TypeScript, cloud infrastructure, and systems security.{" "}
+                <em>"I don't just learn technologies — I build with them until I understand
+                them completely."</em>
               </motion.p>
 
               {/* Stats row */}
-              <motion.div variants={itemVariants} className="stats-row">
+              <motion.div
+                variants={itemVariants}
+                className="flex gap-7 items-end flex-wrap mt-9 max-sm:gap-4 max-sm:mt-6"
+              >
                 {stats.map((stat, i) => (
-                  <>
+                  <div key={stat.label} className="flex items-end gap-7 max-sm:gap-0">
                     <StatItem
-                      key={stat.label}
                       value={stat.value}
                       sup={stat.sup}
                       label={stat.label}
                       inView={inView}
                     />
                     {i < stats.length - 1 && (
-                      <motion.div
-                        className="stat-divider"
-                        key={`div-${i}`}
-                        initial={{ scaleY: 0, opacity: 0 }}
-                        animate={inView ? { scaleY: 1, opacity: 1 } : {}}
-                        transition={{ duration: 0.6, delay: 0.9 + i * 0.1 }}
-                        style={{ transformOrigin: "top" }}
-                      />
+                      <>
+                        <motion.div
+                          className="w-px bg-white/20 self-center max-sm:hidden"
+                          initial={{ scaleY: 0, opacity: 0 }}
+                          animate={inView ? { scaleY: 1, opacity: 1 } : {}}
+                          transition={{ duration: 0.6, delay: 0.9 + i * 0.1 }}
+                          style={{ height: 30, transformOrigin: "top" }}
+                        />
+                        {/* gap spacer on mobile */}
+                        <div className="hidden max-sm:block w-3" />
+                      </>
                     )}
-                  </>
+                  </div>
                 ))}
               </motion.div>
             </motion.div>
@@ -518,19 +296,30 @@ export default function About() {
             {/* ── Lanyard Column — desktop only ── */}
             {!isMobile && (
               <motion.div
-                variants={itemVariants}
-                className="lanyard-column"
+                className="relative w-[280px] flex-shrink-0 self-stretch"
                 initial={{ opacity: 0, x: 30 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
               >
-                <div className="lanyard-canvas-wrapper">
+                <div className="absolute inset-0 w-full h-full [&_canvas]:w-full [&_canvas]:h-full [&>div]:w-full [&>div]:h-full [&>div>canvas]:w-full [&>div>canvas]:h-full">
                   <Lanyard position={[0, 0, 14]} gravity={[0, -40, 0]} />
                 </div>
               </motion.div>
             )}
           </motion.div>
         </div>
+
+        {/* Keyframe injections for animations Tailwind can't handle */}
+        <style>{`
+          @keyframes borderPulse {
+            0%, 100% { opacity: 0; }
+            50%       { opacity: 1; }
+          }
+          @keyframes shimmerSweep {
+            from { transform: translateX(-100%); }
+            to   { transform: translateX(200%); }
+          }
+        `}</style>
       </section>
     </>
   );
