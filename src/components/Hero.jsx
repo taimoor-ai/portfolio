@@ -345,29 +345,29 @@ export default function Hero() {
                 margin: 0,
                 fontWeight: 900,
                 lineHeight: 1.05,
-                  minHeight: "2.2em",   // reserve space for 1–2 lines
+                minHeight: "2.2em", // reserve space for 1–2 lines
                 fontSize: "clamp(2.8rem, 6.5vw, 6.5rem)",
                 letterSpacing: "-0.02em",
                 fontFamily: "'Playfair Display', 'Georgia', serif",
               }}
-            > 
-            <span style={{ display: "inline-block" }}>
-              <TextType
-                text={[
-                  "Hi! I'm\nTaimoor",
-                  "Full Stack\nDeveloper",
-                  "React NodeJs\nExpert",
-                   "Ai/Ml\nEnthusiast",
-                ]}
-                typingSpeed={100}
-                pauseDuration={1500}
-                showCursor
-                cursorCharacter="_"
-                deletingSpeed={50}
-              />
-                </span>
+            >
+              <span style={{ display: "inline-block" }}>
+                <TextType
+                  text={[
+                    "Hi! I'm\nTaimoor",
+                    "Full Stack\nDeveloper",
+                    "React NodeJs\nExpert",
+                    "Ai/Ml\nEnthusiast",
+                  ]}
+                  typingSpeed={100}
+                  pauseDuration={1500}
+                  showCursor
+                  cursorCharacter="_"
+                  deletingSpeed={50}
+                />
+              </span>
             </h1>
-          
+
             <div
               className="hero-left-accent"
               style={{ display: "flex", alignItems: "center", gap: "10px" }}
@@ -389,15 +389,22 @@ export default function Hero() {
             >
               Developer · Designer · Creator
             </p>
-
             <div
               className="hero-buttons hero-buttons-row"
               style={{ display: "flex", gap: "0.85rem", flexWrap: "wrap" }}
             >
-              {["Contact", "Who I'm"].map((label) => (
+              {[
+                { label: "Contact", target: "contact" },
+                { label: "Who I'm", target: "about" },
+              ].map((item) => (
                 <button
-                  key={label}
+                  key={item.label}
                   className="hero-btn"
+                  onClick={() => {
+                    document
+                      .getElementById(item.target)
+                      ?.scrollIntoView({ behavior: "smooth" });
+                  }}
                   style={{
                     padding: "0.55rem 1.5rem",
                     border: "1px solid rgba(200,200,200,0.4)",
@@ -412,7 +419,7 @@ export default function Hero() {
                     textTransform: "uppercase",
                   }}
                 >
-                  {label}
+                  {item.label}
                 </button>
               ))}
             </div>
