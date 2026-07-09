@@ -263,6 +263,7 @@ export default function Hero() {
       <style>{styles}</style>
 
       <section
+        id="home"
         style={{
           position: "relative",
           width: "100%",
