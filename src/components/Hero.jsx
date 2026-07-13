@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import myImage from "../assets/myImage.png";
+import myImage from "../assets/myImage2.png";
 import TextType from "./TypeText";
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&display=swap');
